@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Roleplay Love - Diễn Đàn Tìm Partner & Nhắn Tin</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pastel: {
+                            bg: '#f0f4f8',
+                            card: '#ffffff',
+                            blue: '#8eabb5',
+                            lightBlue: '#dbe7ed',
+                            darkText: '#3a4750',
+                            accent: '#64828e',
+                            pink: '#fce4ec',
+                            rose: '#f43f5e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #eef3f7 0%, #e2ebf0 100%);
+            color: #3a4750;
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px -5px rgba(142, 171, 181, 0.12);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .notif-dropdown-top {
+            z-index: 9999 !important;
+        }
+    </style>
+</head>
+<body class="p-2 sm:p-4 md:p-6 pb-28 md:pb-12 max-w-5xl mx-auto relative min-h-screen">
+
+    <div id="rulesModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[10000] flex items-center justify-center p-4 hidden fade-in">
+        <div class="glass-card max-w-lg w-full rounded-3xl p-5 sm:p-7 space-y-4 shadow-2xl relative border border-white">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-pastel-blue/20 text-pastel-accent flex items-center justify-center text-xl flex-shrink-0">
+                    <i class="fa-solid fa-scroll"></i>
+                </div>
+                <div>
+                    <h2 class="text-base sm:text-lg font-bold text-pastel-darkText">Nội Quy Diễn Đàn</h2>
+                    <p class="text-xs text-slate-400">Vui lòng đọc kỹ trước khi tham gia</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed max-h-[60vh] overflow-y-auto pr-2">
+                <p class="italic text-pastel-accent font-medium bg-pastel-lightBlue/30 p-3 rounded-2xl">
+                    "Chào mừng bạn đã đến với Roleplay Love. Đây là một diễn đàn dành cho các bạn muốn tìm partner, tuy nơi này mới thành lập nhưng ít nhiều cũng có phải luật lệ riêng cho nó."
+                </p>
+                <ol class="list-decimal pl-5 space-y-2 font-normal">
+                    <li>Website chỉ là nơi giúp bạn tìm partner, như một diễn đàn bình thường, website không cổ xúy các bạn yêu nhau hay mập mờ. Website không chịu trách nhiệm nếu các bạn rơi vào lưới tình, cảm mến, có tình cảm với đối phương.</li>
+                    <li>Website này hiện tại chỉ có một chủ, không liên hệ đến bất kì bên nào khác.</li>
+                    <li>Website này hoàn toàn ẩn danh, chỉ lưu lại biệt danh mà các bạn đã đặt trong website.</li>
+                    <li>Website vẫn đang trong tình trạng beta, luật và điều khoản sẽ được cập nhật thường xuyên, nếu bạn có feedback giành cho website thì hãy ghé qua <strong class="text-pastel-accent font-bold">bachin_2</strong> trên Discord.</li>
+                </ol>
+            </div>
+
+            <button onclick="toggleModal('rulesModal', false)" class="w-full py-3 bg-pastel-blue hover:bg-pastel-accent text-white font-bold rounded-2xl text-xs sm:text-sm transition shadow-md">
+                Đã Đọc & Đồng Ý
+            </button>
+        </div>
+    </div>
+
+    <div id="createPostModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 hidden fade-in">
+        <div class="glass-card max-w-lg w-full rounded-3xl p-5 sm:p-6 space-y-4 shadow-2xl relative border border-white">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-sm sm:text-base font-bold text-pastel-darkText flex items-center gap-2">
+                    <i class="fa-solid fa-pen-nib text-pastel-blue"></i> Tạo Bài Viết Mới
+                </h3>
+                <button onclick="toggleModal('createPostModal', false)" class="text-slate-400 hover:text-slate-600 text-sm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleCreatePost(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Chọn Hashtag (Bắt buộc):</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="postTag" value="BL" class="peer hidden" checked>
+                            <span class="block text-center py-1.5 text-xs font-bold rounded-xl border border-slate-200 peer-checked:bg-pastel-blue peer-checked:text-white peer-checked:border-pastel-blue transition">#BL</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="postTag" value="GL" class="peer hidden">
+                            <span class="block text-center py-1.5 text-xs font-bold rounded-xl border border-slate-200 peer-checked:bg-pastel-blue peer-checked:text-white peer-checked:border-pastel-blue transition">#GL</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="postTag" value="BG" class="peer hidden">
+                            <span class="block text-center py-1.5 text-xs font-bold rounded-xl border border-slate-200 peer-checked:bg-pastel-blue peer-checked:text-white peer-checked:border-pastel-blue transition">#BG</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="postTag" value="GB" class="peer hidden">
+                            <span class="block text-center py-1.5 text-xs font-bold rounded-xl border border-slate-200 peer-checked:bg-pastel-blue peer-checked:text-white peer-checked:border-pastel-blue transition">#GB</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Tiêu đề bài viết:</label>
+                    <input type="text" id="postTitle" required placeholder="Ví dụ: Tìm partner RP học đường nhẹ nhàng..." class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-pastel-blue bg-white">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Nội dung chi tiết:</label>
+                    <textarea id="postContent" required rows="4" placeholder="Mô tả chi tiết về nhân vật, cốt truyện (plot), yêu cầu partner..." class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-pastel-blue bg-white"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Link ảnh/media (Không bắt buộc):</label>
+                    <input type="url" id="postMediaUrl" placeholder="https://example.com/image.jpg" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-pastel-blue bg-white">
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="toggleModal('createPostModal', false)" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition">Hủy</button>
+                    <button type="submit" class="px-5 py-2 bg-pastel-blue text-white rounded-xl text-xs font-bold hover:bg-pastel-accent transition shadow-md">Đăng Bài</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editPostModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 hidden fade-in">
+        <div class="glass-card max-w-lg w-full rounded-3xl p-5 sm:p-6 space-y-4 shadow-2xl relative border border-white">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-sm sm:text-base font-bold text-pastel-darkText flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-pastel-blue"></i> Chỉnh Sửa Bài Viết
+                </h3>
+                <button onclick="toggleModal('editPostModal', false)" class="text-slate-400 hover:text-slate-600 text-sm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleSaveEditedPost(event)" class="space-y-3">
+                <input type="hidden" id="editPostId">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Tiêu đề:</label>
+                    <input type="text" id="editPostTitle" required class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-pastel-blue bg-white">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Nội dung:</label>
+                    <textarea id="editPostContent" required rows="4" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-pastel-blue bg-white"></textarea>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="toggleModal('editPostModal', false)" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition">Hủy</button>
+                    <button type="submit" class="px-5 py-2 bg-pastel-blue text-white rounded-xl text-xs font-bold hover:bg-pastel-accent transition shadow-md">Lưu Thay Đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <header class="glass-card rounded-3xl p-3 sm:p-4 mb-4 border border-white relative z-30 overflow-visible">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-pastel-blue/20 text-pastel-accent flex items-center justify-center text-lg font-bold shadow-sm">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base sm:text-lg font-bold text-pastel-darkText tracking-tight">Roleplay Love</h1>
+                        <p class="text-[10px] sm:text-xs text-slate-400 font-medium">Diễn đàn tìm partner & kết nối</p>
+                    </div>
+                </div>
+
+                <button onclick="toggleModal('rulesModal', true)" class="md:hidden px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-medium flex items-center gap-1">
+                    <i class="fa-solid fa-book-open text-pastel-blue"></i> Nội quy
+                </button>
+            </div>
+
+            <!-- Scrollable Responsive Navigation Tabs -->
+            <nav class="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto no-scrollbar py-1">
+                <button id="tab-public" onclick="switchTab('public')" class="tab-btn active whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-1.5 bg-pastel-blue text-white shadow-sm">
+                    <i class="fa-solid fa-globe"></i> Bài Viết Cộng Đồng
+                </button>
+                <button id="tab-own" onclick="switchTab('own')" class="tab-btn whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-2xl text-xs font-semibold transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-user-pen"></i> Bài Viết Của Tôi
+                </button>
+                <button id="tab-settings" onclick="switchTab('settings')" class="tab-btn whitespace-nowrap px-3.5 sm:px-4 py-2 rounded-2xl text-xs font-semibold transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-gear"></i> Cài Đặt
+                </button>
+            </nav>
+
+            <div class="flex items-center gap-2 self-end md:self-auto relative">
+                <button onclick="toggleModal('rulesModal', true)" class="hidden md:flex px-3 py-2 rounded-2xl bg-slate-100 text-slate-600 text-xs font-semibold items-center gap-1.5 hover:bg-slate-200 transition">
+                    <i class="fa-solid fa-book-open text-pastel-blue"></i> Nội Quy
+                </button>
+
+                <!-- Notification Dropdown -->
+                <div class="relative">
+                    <button onclick="toggleNotifDropdown()" class="w-9 h-9 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition relative">
+                        <i class="fa-regular fa-bell text-sm"></i>
+                        <span id="notifBadge" class="hidden absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">0</span>
+                    </button>
+
+                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-72 sm:w-80 glass-card bg-white/95 rounded-3xl p-3 shadow-2xl notif-dropdown-top border border-slate-100 space-y-2">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2 px-1">
+                            <span class="text-xs font-bold text-pastel-darkText flex items-center gap-1">
+                                <i class="fa-solid fa-bell text-pastel-blue"></i> Thông Báo Của Bạn
+                            </span>
+                            <button onclick="clearNotifications()" class="text-[10px] text-slate-400 hover:text-rose-500">Xóa tất cả</button>
+                        </div>
+                        <div id="notifList" class="max-h-64 overflow-y-auto space-y-1.5 pr-1">
+                            <!-- Rendered dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Profile Badge -->
+                <div onclick="switchTab('own')" class="flex items-center gap-2 cursor-pointer bg-slate-100/80 hover:bg-slate-200/80 px-2.5 py-1.5 rounded-2xl transition">
+                    <div id="userAvatar" class="w-6 h-6 rounded-full text-white font-bold text-[10px] flex items-center justify-center" style="background-color: #94a3b8;">
+                        ?
+                    </div>
+                    <span id="userNameDisplay" class="text-xs font-semibold text-pastel-darkText truncate max-w-[80px]">Chưa nhập</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="glass-card rounded-2xl p-2.5 sm:p-3 mb-4 border border-white flex items-center gap-2">
+        <div class="relative flex-grow">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Tìm kiếm bài viết theo thẻ (#BL, #GL, #BG...) hoặc nội dung..." class="w-full pl-8 pr-8 py-2 bg-slate-50/80 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-pastel-blue">
+            <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="flex items-center gap-1 flex-shrink-0">
+            <button onclick="quickFilterTag('BL')" class="px-2 py-1 bg-slate-100 hover:bg-pastel-lightBlue text-slate-600 font-bold text-[10px] sm:text-xs rounded-lg transition">#BL</button>
+            <button onclick="quickFilterTag('GL')" class="px-2 py-1 bg-slate-100 hover:bg-pastel-lightBlue text-slate-600 font-bold text-[10px] sm:text-xs rounded-lg transition">#GL</button>
+            <button onclick="quickFilterTag('BG')" class="px-2 py-1 bg-slate-100 hover:bg-pastel-lightBlue text-slate-600 font-bold text-[10px] sm:text-xs rounded-lg transition">#BG</button>
+        </div>
+    </div>
+
+    <main id="sec-public" class="space-y-4">
+        <div id="postsList" class="space-y-4">
+            <!-- Dynamic Posts Rendered Here -->
+        </div>
+    </main>
+
+    <section id="sec-own" class="hidden space-y-4">
+        <!-- Auth Form if not registered -->
+        <div id="ownPostAuthGuard" class="glass-card p-6 rounded-3xl max-w-md mx-auto space-y-4 text-center border border-white">
+            <div class="w-12 h-12 bg-pastel-blue/20 text-pastel-accent rounded-2xl mx-auto flex items-center justify-center text-xl">
+                <i class="fa-solid fa-user-lock"></i>
+            </div>
+            <div>
+                <h2 class="text-base font-bold text-pastel-darkText">Nhập Tên Người Dùng</h2>
+                <p class="text-xs text-slate-400 mt-1">Vui lòng chọn Tên người dùng để bắt đầu đăng bài & quản lý.</p>
+            </div>
+
+            <form onsubmit="handleUserRegistration(event)" class="space-y-3 text-left">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Tên người dùng (Duy nhất per user):</label>
+                    <input type="text" id="usernameInput" required placeholder="Nhập tên người dùng của bạn..." class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-pastel-blue bg-white">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Chọn thông báo bạn muốn nhận:</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer">
+                            <input type="checkbox" value="BL" class="notif-tag-checkbox accent-pastel-blue">
+                            <span class="text-xs font-semibold text-slate-600">Thẻ #BL</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer">
+                            <input type="checkbox" value="GL" class="notif-tag-checkbox accent-pastel-blue">
+                            <span class="text-xs font-semibold text-slate-600">Thẻ #GL</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer">
+                            <input type="checkbox" value="BG" class="notif-tag-checkbox accent-pastel-blue">
+                            <span class="text-xs font-semibold text-slate-600">Thẻ #BG</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer">
+                            <input type="checkbox" value="GB" class="notif-tag-checkbox accent-pastel-blue">
+                            <span class="text-xs font-semibold text-slate-600">Thẻ #GB</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-2.5 bg-pastel-blue text-white rounded-xl text-xs font-bold hover:bg-pastel-accent transition shadow-md">
+                    Xác Nhận & Tiếp Tục
+                </button>
+            </form>
+        </div>
+
+        <!-- Own Posts View -->
+        <div id="ownPostsContainer" class="hidden space-y-4">
+            <div class="flex items-center justify-between glass-card p-4 rounded-2xl border border-white">
+                <div>
+                    <h2 class="text-sm sm:text-base font-bold text-pastel-darkText">Bài Viết Do Bạn Đăng</h2>
+                    <p class="text-[11px] text-slate-400">Các bài viết sẽ tự động hết hạn và xóa sau 14 ngày.</p>
+                </div>
+                <span id="ownPostsCountBadge" class="px-3 py-1 rounded-xl bg-pastel-lightBlue text-pastel-accent text-xs font-bold">0 bài viết</span>
+            </div>
+
+            <div id="ownPostsList" class="space-y-4">
+                <!-- Rendered dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <section id="sec-settings" class="hidden space-y-4">
+        <div class="glass-card p-5 sm:p-6 rounded-3xl max-w-xl mx-auto space-y-5 border border-white">
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+                <div class="w-10 h-10 rounded-2xl bg-pastel-blue/20 text-pastel-accent flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-user-gear"></i>
+                </div>
+                <div>
+                    <h2 class="text-base font-bold text-pastel-darkText">Cài Đặt Tài Khoản</h2>
+                    <p class="text-xs text-slate-400">Tùy chỉnh thông tin và nhận thông báo</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between">
+                    <div>
+                        <span class="text-[11px] text-slate-400 block font-medium">Tên người dùng (Cố định):</span>
+                        <span id="settingsCurrentUsername" class="text-xs font-bold text-pastel-darkText">@username</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[11px] text-slate-400">Màu hiển thị:</span>
+                        <div id="settingsColorBox" class="w-6 h-6 rounded-lg shadow-sm border border-white"></div>
+                        <span id="settingsColorHex" class="text-[10px] text-slate-400 font-mono">#000000</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-slate-500">Đổi Biệt Danh (14 ngày / lần):</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="settingsNicknameInput" placeholder="Nhập biệt danh mới..." class="flex-grow px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-pastel-blue bg-white">
+                        <button onclick="updateNickname()" class="px-4 py-2 bg-pastel-blue text-white rounded-xl text-xs font-bold hover:bg-pastel-accent transition flex-shrink-0 shadow-sm">
+                            Cập Nhật
+                        </button>
+                    </div>
+                    <p id="nicknameCooldownMsg" class="text-xs font-medium text-slate-400"></p>
+                </div>
+
+                <div class="space-y-2 pt-2 border-t border-slate-100">
+                    <label class="block text-xs font-semibold text-slate-500">Tùy chọn thông báo nhận bài viết mới:</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer">
+                            <input type="checkbox" value="BL" class="settings-notif-checkbox accent-pastel-blue">
+                            <span class="text-xs font-semibold text-slate-600">Thẻ #BL</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer">
+                            <input type="checkbox" value="GL" class="settings-notif-checkbox accent-pastel-blue">
+                            <span class="text-xs font-semibold text-slate-600">Thẻ #GL</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer">
+                            <input type="checkbox" value="BG" class="settings-notif-checkbox accent-pastel-blue">
+                            <span class="text-xs font-semibold text-slate-600">Thẻ #BG</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer">
+                            <input type="checkbox" value="GB" class="settings-notif-checkbox accent-pastel-blue">
+                            <span class="text-xs font-semibold text-slate-600">Thẻ #GB</span>
+                        </label>
+                    </div>
+                    <button onclick="saveNotifSettings()" class="mt-2 w-full py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl text-xs font-bold transition">
+                        Lưu Tùy Chọn Thông Báo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="fixed bottom-4 left-0 right-0 z-40 max-w-5xl mx-auto px-4 pointer-events-none flex items-center justify-between">
+        <button onclick="openCreatePostModal()" class="pointer-events-auto px-4 sm:px-5 py-3 rounded-full bg-pastel-blue text-white font-bold text-xs sm:text-sm shadow-xl hover:bg-pastel-accent transition flex items-center gap-2 border-2 border-white transform hover:scale-105 active:scale-95">
+            <i class="fa-solid fa-plus text-sm"></i>
+            <span>Tạo Bài Viết Mới</span>
+        </button>
+
+        <button onclick="toggleChatWidget()" class="pointer-events-auto w-14 h-14 rounded-full bg-pastel-accent text-white shadow-xl hover:bg-pastel-darkText transition flex items-center justify-center border-2 border-white transform hover:scale-105 active:scale-95 relative">
+            <i class="fa-solid fa-comments text-xl"></i>
+            <span id="chatUnreadBadge" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-white">0</span>
+        </button>
+    </div>
+
+    <div id="chatPanel" class="fixed bottom-20 right-4 sm:right-6 w-[90vw] sm:w-80 h-96 glass-card bg-white/95 rounded-3xl shadow-2xl z-50 border border-slate-100 flex flex-col hidden fade-in overflow-hidden">
+        <!-- Chat Header -->
+        <div class="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div id="chatActiveAvatar" class="w-8 h-8 rounded-full text-white font-bold text-xs flex items-center justify-center" style="background-color: #8eabb5;">
+                    ?
+                </div>
+                <div>
+                    <h4 id="chatActiveTitle" class="text-xs font-bold text-pastel-darkText leading-tight">Trò Chuyện</h4>
+                    <span id="chatActiveSubtitle" class="text-[10px] text-slate-400 block">Chọn người dùng để nhắn</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="showChatUserSearch()" title="Tìm người dùng" class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs flex items-center justify-center transition">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <button onclick="deleteChatHistory()" title="Xóa hội thoại này" class="w-7 h-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 text-xs flex items-center justify-center transition">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+                <button onclick="toggleChatWidget()" class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Search User Overlay -->
+        <div id="chatUserSearchOverlay" class="absolute inset-x-0 top-12 bottom-0 bg-white/95 z-10 p-3 space-y-2 flex flex-col hidden">
+            <input type="text" id="chatSearchInput" oninput="searchUsersForChat()" placeholder="Tìm theo username..." class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-pastel-blue">
+            <div id="chatUserSearchResults" class="flex-grow overflow-y-auto space-y-1 pr-1">
+                <!-- Search Results -->
+            </div>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div id="chatMessagesArea" class="flex-grow p-3 overflow-y-auto space-y-2 bg-slate-50/50">
+            <!-- Messages rendered here -->
+        </div>
+
+        <!-- Chat Input Form -->
+        <form onsubmit="handleSendDirectMessage(event)" class="p-2 bg-white border-t border-slate-100 flex gap-1.5">
+            <input type="text" id="chatInputMessage" placeholder="Nhập tin nhắn..." disabled class="flex-grow px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-pastel-blue disabled:bg-slate-50">
+            <button type="submit" id="chatSendBtn" disabled class="px-3 py-1.5 bg-pastel-blue text-white rounded-xl text-xs font-bold hover:bg-pastel-accent disabled:opacity-50 transition">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        const PASTEL_COLORS = [
+            '#8eabb5', '#a2b9bc', '#b2ad7f', '#878f99', '#6b5b95', 
+            '#feb236', '#d53a9d', '#74b9ff', '#a29bfe', '#fd79a8'
+        ];
+
+        let currentUser = JSON.parse(localStorage.getItem('roleplay_love_user')) || null;
+        let registeredUsers = JSON.parse(localStorage.getItem('roleplay_love_registered_users')) || [];
+        let posts = (JSON.parse(localStorage.getItem('roleplay_love_posts')) || []).filter(p => !p.id.startsWith('post_sample_'));
+        let notifications = JSON.parse(localStorage.getItem('roleplay_love_notifications')) || [];
+        let directMessages = JSON.parse(localStorage.getItem('roleplay_love_direct_messages')) || {};
+        
+        let activeTab = 'public';
+        let searchQuery = '';
+        let activeChatUser = null;
+
+        // Default registered bot users for testing chat
+        if (registeredUsers.length === 0) {
+            registeredUsers = [
+                { username: 'chichan', nickname: 'Chi Chi', color: '#8eabb5', notifTags: ['BL', 'GL'] },
+                { username: 'yuuki_art', nickname: 'Yuuki R', color: '#fd79a8', notifTags: ['GL'] },
+                { username: 'minh_nguyen', nickname: 'Minh Mẫn', color: '#a29bfe', notifTags: ['BG'] }
+            ];
+            localStorage.setItem('roleplay_love_registered_users', JSON.stringify(registeredUsers));
+        }
+
+        window.onload = function() {
+            const rulesSeen = localStorage.getItem('roleplay_love_rules_seen');
+            if (!rulesSeen) {
+                toggleModal('rulesModal', true);
+                localStorage.setItem('roleplay_love_rules_seen', 'true');
+            }
+
+            cleanExpiredPosts();
+            updateUserUI();
+            renderPosts();
+            updateUnreadChatBadge();
+
+            setInterval(updateTimersAndCountdown, 1000);
+        };
+
+        function toggleModal(modalId, show) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-pastel-blue', 'text-white', 'shadow-sm');
+                btn.classList.add('text-slate-600');
+            });
+
+            const targetBtn = document.getElementById(`tab-${tab}`);
+            if (targetBtn) {
+                targetBtn.classList.add('active', 'bg-pastel-blue', 'text-white', 'shadow-sm');
+                targetBtn.classList.remove('text-slate-600');
+            }
+
+            const secPublic = document.getElementById('sec-public');
+            const secOwn = document.getElementById('sec-own');
+            const secSettings = document.getElementById('sec-settings');
+
+            if (secPublic) secPublic.classList.add('hidden');
+            if (secOwn) secOwn.classList.add('hidden');
+            if (secSettings) secSettings.classList.add('hidden');
+
+            const activeSec = document.getElementById(`sec-${tab}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+
+            if (tab === 'own') {
+                checkOwnPostsAuth();
+            } else if (tab === 'settings') {
+                populateSettingsView();
+            }
+        }
+
+        function getRandomColor() {
+            return PASTEL_COLORS[Math.floor(Math.random() * PASTEL_COLORS.length)];
+        }
+
+        function handleUserRegistration(e) {
+            e.preventDefault();
+            const usernameInput = document.getElementById('usernameInput').value.trim().toLowerCase();
+            if (!usernameInput) return;
+
+            const existingUser = registeredUsers.find(u => u.username === usernameInput);
+            const notifCheckboxes = document.querySelectorAll('.notif-tag-checkbox:checked');
+            const selectedNotifTags = Array.from(notifCheckboxes).map(cb => cb.value);
+
+            if (existingUser) {
+                currentUser = existingUser;
+                currentUser.notifTags = selectedNotifTags;
+                saveUserSession();
+                showCustomToast(`Chào mừng quay trở lại, @${currentUser.username}!`);
+            } else {
+                const newUser = {
+                    username: usernameInput,
+                    nickname: usernameInput,
+                    color: getRandomColor(),
+                    notifTags: selectedNotifTags,
+                    lastNicknameChange: null
+                };
+                registeredUsers.push(newUser);
+                localStorage.setItem('roleplay_love_registered_users', JSON.stringify(registeredUsers));
+                currentUser = newUser;
+                saveUserSession();
+                showCustomToast(`Đăng ký tên thành công: @${currentUser.username}`);
+            }
+
+            updateUserUI();
+            checkOwnPostsAuth();
+            updateUnreadChatBadge();
+        }
+
+        function saveUserSession() {
+            localStorage.setItem('roleplay_love_user', JSON.stringify(currentUser));
+            const idx = registeredUsers.findIndex(u => u.username === currentUser.username);
+            if (idx !== -1) {
+                registeredUsers[idx] = currentUser;
+                localStorage.setItem('roleplay_love_registered_users', JSON.stringify(registeredUsers));
+            }
+        }
+
+        function updateUserUI() {
+            const avatarEl = document.getElementById('userAvatar');
+            const nameEl = document.getElementById('userNameDisplay');
+
+            if (currentUser) {
+                if (avatarEl) {
+                    avatarEl.style.backgroundColor = currentUser.color;
+                    avatarEl.innerText = currentUser.nickname.charAt(0).toUpperCase();
+                }
+                if (nameEl) nameEl.innerText = currentUser.nickname;
+            } else {
+                if (avatarEl) {
+                    avatarEl.style.backgroundColor = '#94a3b8';
+                    avatarEl.innerText = '?';
+                }
+                if (nameEl) nameEl.innerText = 'Chưa nhập';
+            }
+            renderNotifications();
+        }
+
+        function checkOwnPostsAuth() {
+            const guard = document.getElementById('ownPostAuthGuard');
+            const container = document.getElementById('ownPostsContainer');
+
+            if (currentUser) {
+                if (guard) guard.classList.add('hidden');
+                if (container) container.classList.remove('hidden');
+                renderOwnPosts();
+            } else {
+                if (guard) guard.classList.remove('hidden');
+                if (container) container.classList.add('hidden');
+            }
+        }
+
+        function cleanExpiredPosts() {
+            const FOURTEEN_DAYS_MS = 14 * 24 * 60 * 60 * 1000;
+            const now = Date.now();
+            posts = posts.filter(post => (now - post.createdAt) < FOURTEEN_DAYS_MS);
+            localStorage.setItem('roleplay_love_posts', JSON.stringify(posts));
+        }
+
+        function renderPosts() {
+            const listEl = document.getElementById('postsList');
+            if (!listEl) return;
+            listEl.innerHTML = '';
+
+            let filteredPosts = posts;
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                filteredPosts = posts.filter(p => 
+                    p.tag.toLowerCase().includes(query) ||
+                    p.title.toLowerCase().includes(query) ||
+                    p.content.toLowerCase().includes(query)
+                );
+            }
+
+            if (filteredPosts.length === 0) {
+                listEl.innerHTML = `
+                    <div class="glass-card p-6 text-center rounded-3xl space-y-2 border border-white">
+                        <i class="fa-solid fa-folder-open text-3xl text-pastel-blue"></i>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium">Chưa có bài viết nào trong diễn đàn.</p>
+                        <button onclick="openCreatePostModal()" class="px-4 py-2 bg-pastel-blue text-white font-bold rounded-xl text-xs hover:bg-pastel-accent transition">Tạo bài đầu tiên</button>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredPosts.sort((a, b) => b.createdAt - a.createdAt).forEach(post => {
+                listEl.appendChild(createPostCardElement(post));
+            });
+        }
+
+        function createPostCardElement(post) {
+            const card = document.createElement('article');
+            card.className = 'glass-card rounded-3xl p-4 sm:p-5 md:p-6 space-y-3 sm:space-y-4 fade-in border border-white';
+            card.id = `post-${post.id}`;
+
+            const expiryTime = post.createdAt + (14 * 24 * 60 * 60 * 1000);
+            const remainingDays = Math.max(0, Math.ceil((expiryTime - Date.now()) / (1000 * 60 * 60 * 24)));
+
+            const isAuthor = currentUser && currentUser.username === post.authorUsername;
+            const canEditSeconds = Math.max(0, Math.ceil((post.createdAt + 5000 - Date.now()) / 1000));
+            const isLiked = currentUser && post.likes && post.likes.includes(currentUser.username);
+
+            card.innerHTML = `
+                <div class="flex items-start justify-between gap-2">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-sm flex-shrink-0" style="background-color: ${post.authorColor}">
+                            ${post.authorNickname.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="font-bold text-pastel-darkText text-xs sm:text-sm truncate">${escapeHtml(post.authorNickname)}</span>
+                                <span class="text-[10px] sm:text-[11px] text-slate-400">@${escapeHtml(post.authorUsername)}</span>
+                            </div>
+                            <span class="text-[10px] sm:text-[11px] text-slate-400 flex items-center gap-1 flex-wrap">
+                                <span><i class="fa-regular fa-clock text-[9px]"></i> ${timeAgo(post.createdAt)}</span>
+                                <span class="text-amber-600 font-medium">• Xóa sau ${remainingDays}d</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <span class="px-2.5 py-1 rounded-full bg-pastel-lightBlue/60 text-pastel-accent font-bold text-[10px] sm:text-xs">
+                            #${post.tag}
+                        </span>
+
+                        <button onclick="startChatWithUser('${post.authorUsername}')" title="Nhắn tin riêng" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-xl bg-pastel-lightBlue/40 text-pastel-accent hover:bg-pastel-blue hover:text-white transition">
+                            <i class="fa-solid fa-paper-plane mr-1"></i>Chat
+                        </button>
+
+                        ${isAuthor ? `
+                            <button onclick="openEditModal('${post.id}')" id="editBtn-${post.id}" ${canEditSeconds > 0 ? 'disabled' : ''} class="text-[11px] sm:text-xs px-2.5 py-1 rounded-xl bg-slate-100 text-slate-600 hover:bg-pastel-blue hover:text-white transition disabled:opacity-40 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-pen-to-square"></i> <span id="editTimer-${post.id}">${canEditSeconds > 0 ? `${canEditSeconds}s` : 'Sửa'}</span>
+                            </button>
+                            <button onclick="deletePost('${post.id}')" title="Xóa bài viết" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <h2 class="text-sm sm:text-base font-bold text-pastel-darkText">${escapeHtml(post.title)}</h2>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line">${escapeHtml(post.content)}</p>
+                </div>
+
+                ${post.mediaUrl ? `
+                    <div class="rounded-2xl overflow-hidden max-h-80 bg-slate-100 border border-slate-100">
+                        <img src="${escapeHtml(post.mediaUrl)}" onerror="this.style.display='none'" alt="Media" class="w-full h-full object-cover">
+                    </div>
+                ` : ''}
+
+                <div class="flex items-center justify-between border-t border-slate-100/80 pt-2.5 text-xs">
+                    <button onclick="toggleLike('${post.id}')" class="flex items-center gap-1.5 font-semibold ${isLiked ? 'text-rose-500' : 'text-slate-400 hover:text-rose-500'} transition">
+                        <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i>
+                        <span>${post.likes ? post.likes.length : 0} Thích</span>
+                    </button>
+
+                    <span class="text-slate-400 font-medium text-[11px] sm:text-xs">
+                        <i class="fa-regular fa-comment mr-1"></i> ${countTotalComments(post.comments || [])} bình luận
+                    </span>
+                </div>
+
+                <div class="bg-slate-50/80 p-3 sm:p-4 rounded-2xl space-y-2.5 border border-slate-100">
+                    <div class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                        ${renderCommentsList(post.id, post.comments || [], post.authorUsername)}
+                    </div>
+
+                    <form onsubmit="handleAddComment(event, '${post.id}')" class="flex gap-1.5 pt-1">
+                        <input type="text" id="commentInput-${post.id}" placeholder="${currentUser ? 'Bình luận... (@username để nhắc)' : 'Đăng nhập để bình luận'}" ${!currentUser ? 'disabled' : ''} class="flex-grow px-3 py-2 rounded-xl text-xs bg-white border border-slate-200 focus:outline-none focus:border-pastel-blue">
+                        <button type="submit" ${!currentUser ? 'disabled' : ''} class="px-3.5 py-2 bg-pastel-blue text-white font-semibold rounded-xl text-xs hover:bg-pastel-accent transition disabled:opacity-50 flex-shrink-0">
+                            Gửi
+                        </button>
+                    </form>
+                </div>
+            `;
+            return card;
+        }
+
+        function countTotalComments(comments) {
+            let total = comments.length;
+            comments.forEach(c => { if (c.replies) total += c.replies.length; });
+            return total;
+        }
+
+        function renderCommentsList(postId, comments, postAuthorUsername) {
+            if (!comments || comments.length === 0) {
+                return `<p class="text-[11px] text-slate-400 italic text-center py-1">Chưa có bình luận nào.</p>`;
+            }
+
+            return comments.map(c => {
+                const canDeleteComment = currentUser && (currentUser.username === c.authorUsername || currentUser.username === postAuthorUsername);
+                return `
+                <div class="text-xs space-y-1 border-b border-slate-100/80 pb-2 last:border-none">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="font-bold text-pastel-darkText" style="color: ${c.authorColor}">${escapeHtml(c.authorNickname)}</span>
+                            <span class="text-[10px] text-slate-400">@${escapeHtml(c.authorUsername)}</span>
+                            <span class="text-[10px] text-slate-300">• ${timeAgo(c.createdAt)}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="mentionReply('${postId}', '${c.authorUsername}')" class="text-[10px] text-pastel-accent hover:underline font-medium">
+                                <i class="fa-solid fa-reply mr-0.5"></i>Trả lời
+                            </button>
+                            ${canDeleteComment ? `
+                                <button onclick="deleteComment('${postId}', '${c.id}')" title="Xóa bình luận" class="text-[10px] text-rose-400 hover:text-rose-600">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <p class="text-slate-600 pl-1 text-[11px] sm:text-xs">${formatCommentText(c.text)}</p>
+
+                    ${c.replies && c.replies.length > 0 ? `
+                        <div class="ml-3 pl-2 border-l-2 border-pastel-lightBlue/60 space-y-1 mt-1">
+                            ${c.replies.map(r => {
+                                const canDeleteReply = currentUser && (currentUser.username === r.authorUsername || currentUser.username === postAuthorUsername);
+                                return `
+                                <div class="text-[11px] space-y-0.5">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-1 flex-wrap">
+                                            <span class="font-bold text-pastel-darkText" style="color: ${r.authorColor}">${escapeHtml(r.authorNickname)}</span>
+                                            <span class="text-[9px] text-slate-400">@${escapeHtml(r.authorUsername)}</span>
+                                        </div>
+                                        <div class="flex items-center gap-1.5">
+                                            <button onclick="mentionReply('${postId}', '${r.authorUsername}')" class="text-[9px] text-pastel-accent hover:underline">Trả lời</button>
+                                            ${canDeleteReply ? `
+                                                <button onclick="deleteReply('${postId}', '${c.id}', '${r.id}')" title="Xóa" class="text-[9px] text-rose-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                    <p class="text-slate-600">${formatCommentText(r.text)}</p>
+                                </div>
+                            `}).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `}).join('');
+        }
+
+        function deleteComment(postId, commentId) {
+            const post = posts.find(p => p.id === postId);
+            if (!post || !post.comments) return;
+
+            post.comments = post.comments.filter(c => c.id !== commentId);
+            localStorage.setItem('roleplay_love_posts', JSON.stringify(posts));
+            showCustomToast('Đã xóa bình luận!');
+            renderPosts();
+            if (activeTab === 'own') renderOwnPosts();
+        }
+
+        function deleteReply(postId, commentId, replyId) {
+            const post = posts.find(p => p.id === postId);
+            if (!post || !post.comments) return;
+
+            const comment = post.comments.find(c => c.id === commentId);
+            if (comment && comment.replies) {
+                comment.replies = comment.replies.filter(r => r.id !== replyId);
+                localStorage.setItem('roleplay_love_posts', JSON.stringify(posts));
+                showCustomToast('Đã xóa phản hồi!');
+                renderPosts();
+                if (activeTab === 'own') renderOwnPosts();
+            }
+        }
+
+        function formatCommentText(text) {
+            const escaped = escapeHtml(text);
+            return escaped.replace(/@([a-zA-Z0-9_]+)/g, '<span class="text-pastel-blue font-bold bg-pastel-lightBlue/30 px-1 rounded">@$1</span>');
+        }
+
+        function mentionReply(postId, targetUsername) {
+            if (!currentUser) {
+                showCustomToast('Vui lòng đăng nhập để bình luận!');
+                switchTab('own');
+                return;
+            }
+            const input = document.getElementById(`commentInput-${postId}`);
+            if (input) {
+                input.value = `@${targetUsername} ` + input.value;
+                input.focus();
+            }
+        }
+
+        function toggleLike(postId) {
+            if (!currentUser) {
+                showCustomToast('Vui lòng đăng nhập để tương tác!');
+                switchTab('own');
+                return;
+            }
+
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            if (!post.likes) post.likes = [];
+
+            const userIdx = post.likes.indexOf(currentUser.username);
+            if (userIdx === -1) {
+                post.likes.push(currentUser.username);
+            } else {
+                post.likes.splice(userIdx, 1);
+            }
+
+            localStorage.setItem('roleplay_love_posts', JSON.stringify(posts));
+            renderPosts();
+            if (activeTab === 'own') renderOwnPosts();
+        }
+
+        function handleAddComment(e, postId) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const input = document.getElementById(`commentInput-${postId}`);
+            const text = input.value.trim();
+            if (!text) return;
+
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            if (!post.comments) post.comments = [];
+
+            const newComment = {
+                id: 'c_' + Date.now(),
+                authorUsername: currentUser.username,
+                authorNickname: currentUser.nickname,
+                authorColor: currentUser.color,
+                text: text,
+                createdAt: Date.now(),
+                replies: []
+            };
+
+            post.comments.push(newComment);
+
+            const mentions = text.match(/@([a-zA-Z0-9_]+)/g);
+            if (mentions) {
+                mentions.forEach(m => {
+                    const targetUsername = m.replace('@', '').toLowerCase();
+                    if (targetUsername !== currentUser.username) {
+                        sendNotification(targetUsername, {
+                            title: 'Bình luận mới',
+                            message: `@${currentUser.username} đã nhắc đến bạn trong bài viết "${post.title.substring(0, 20)}..."`,
+                            postId: post.id,
+                            createdAt: Date.now()
+                        });
+                    }
+                });
+            }
+
+            localStorage.setItem('roleplay_love_posts', JSON.stringify(posts));
+            input.value = '';
+            renderPosts();
+            if (activeTab === 'own') renderOwnPosts();
+        }
+
+        function openCreatePostModal() {
+            if (!currentUser) {
+                showCustomToast('Bạn cần nhập tên người dùng trước khi tạo bài viết!');
+                switchTab('own');
+                return;
+            }
+            toggleModal('createPostModal', true);
+        }
+
+        function handleCreatePost(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            const mediaUrl = document.getElementById('postMediaUrl').value.trim();
+            const tagRadio = document.querySelector('input[name="postTag"]:checked');
+
+            if (!title || !content || !tagRadio) return;
+            const tag = tagRadio.value;
+
+            const newPost = {
+                id: 'post_' + Date.now(),
+                authorUsername: currentUser.username,
+                authorNickname: currentUser.nickname,
+                authorColor: currentUser.color,
+                title: title,
+                content: content,
+                tag: tag,
+                mediaUrl: mediaUrl,
+                createdAt: Date.now(),
+                likes: [],
+                comments: []
+            };
+
+            posts.unshift(newPost);
+            localStorage.setItem('roleplay_love_posts', JSON.stringify(posts));
+
+            registeredUsers.forEach(user => {
+                if (user.username !== currentUser.username && user.notifTags && user.notifTags.includes(tag)) {
+                    sendNotification(user.username, {
+                        title: `Bài viết mới #${tag}`,
+                        message: `Có bài viết mới thuộc thẻ #${tag}: "${title.substring(0, 25)}..."`,
+                        postId: newPost.id,
+                        createdAt: Date.now()
+                    });
+                }
+            });
+
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+            document.getElementById('postMediaUrl').value = '';
+            toggleModal('createPostModal', false);
+
+            showCustomToast('Đăng bài viết thành công!');
+            renderPosts();
+            if (activeTab === 'own') renderOwnPosts();
+        }
+
+        function openEditModal(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+
+            document.getElementById('editPostId').value = post.id;
+            document.getElementById('editPostTitle').value = post.title;
+            document.getElementById('editPostContent').value = post.content;
+            toggleModal('editPostModal', true);
+        }
+
+        function handleSaveEditedPost(e) {
+            e.preventDefault();
+            const id = document.getElementById('editPostId').value;
+            const title = document.getElementById('editPostTitle').value.trim();
+            const content = document.getElementById('editPostContent').value.trim();
+
+            const post = posts.find(p => p.id === id);
+            if (post) {
+                post.title = title;
+                post.content = content;
+                localStorage.setItem('roleplay_love_posts', JSON.stringify(posts));
+                showCustomToast('Cập nhật bài viết thành công!');
+                renderPosts();
+                if (activeTab === 'own') renderOwnPosts();
+            }
+            toggleModal('editPostModal', false);
+        }
+
+        function deletePost(postId) {
+            posts = posts.filter(p => p.id !== postId);
+            localStorage.setItem('roleplay_love_posts', JSON.stringify(posts));
+            showCustomToast('Đã xóa bài viết thành công!');
+            renderPosts();
+            if (activeTab === 'own') renderOwnPosts();
+        }
+
+        function renderOwnPosts() {
+            const listEl = document.getElementById('ownPostsList');
+            const countBadge = document.getElementById('ownPostsCountBadge');
+            if (!listEl) return;
+
+            if (!currentUser) return;
+            const myPosts = posts.filter(p => p.authorUsername === currentUser.username);
+            if (countBadge) countBadge.innerText = `${myPosts.length} bài viết`;
+
+            if (myPosts.length === 0) {
+                listEl.innerHTML = `
+                    <div class="glass-card p-6 text-center rounded-3xl space-y-2 border border-white">
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium">Bạn chưa đăng bài viết nào.</p>
+                        <button onclick="openCreatePostModal()" class="px-4 py-2 bg-pastel-blue text-white font-bold rounded-xl text-xs hover:bg-pastel-accent transition">Tạo bài ngay</button>
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = '';
+            myPosts.forEach(post => {
+                listEl.appendChild(createPostCardElement(post));
+            });
+        }
+
+        function populateSettingsView() {
+            if (!currentUser) {
+                document.getElementById('settingsCurrentUsername').innerText = 'Chưa đăng nhập';
+                document.getElementById('settingsColorBox').style.backgroundColor = '#ccc';
+                document.getElementById('settingsColorHex').innerText = 'N/A';
+                return;
+            }
+
+            document.getElementById('settingsNicknameInput').value = currentUser.nickname;
+            document.getElementById('settingsCurrentUsername').innerText = `@${currentUser.username}`;
+            document.getElementById('settingsColorBox').style.backgroundColor = currentUser.color;
+            document.getElementById('settingsColorHex').innerText = currentUser.color;
+
+            const notifCheckboxes = document.querySelectorAll('.settings-notif-checkbox');
+            notifCheckboxes.forEach(cb => {
+                cb.checked = currentUser.notifTags && currentUser.notifTags.includes(cb.value);
+            });
+
+            updateNicknameCooldownUI();
+        }
+
+        function updateNicknameCooldownUI() {
+            if (!currentUser) return;
+            const cooldownMsg = document.getElementById('nicknameCooldownMsg');
+            const FOURTEEN_DAYS_MS = 14 * 24 * 60 * 60 * 1000;
+
+            if (currentUser.lastNicknameChange) {
+                const nextAllowed = currentUser.lastNicknameChange + FOURTEEN_DAYS_MS;
+                const remainingDays = Math.ceil((nextAllowed - Date.now()) / (1000 * 60 * 60 * 24));
+
+                if (remainingDays > 0) {
+                    cooldownMsg.innerText = `Bạn có thể đổi biệt danh tiếp theo sau ${remainingDays} ngày nữa.`;
+                    cooldownMsg.className = "text-xs font-medium text-rose-500";
+                    return;
+                }
+            }
+            cooldownMsg.innerText = "Bạn có thể đổi biệt danh ngay bây giờ.";
+            cooldownMsg.className = "text-xs font-medium text-emerald-600";
+        }
+
+        function updateNickname() {
+            if (!currentUser) {
+                showCustomToast('Vui lòng đăng nhập trước!');
+                return;
+            }
+
+            const newNick = document.getElementById('settingsNicknameInput').value.trim();
+            if (!newNick) return;
+
+            const FOURTEEN_DAYS_MS = 14 * 24 * 60 * 60 * 1000;
+            if (currentUser.lastNicknameChange) {
+                const nextAllowed = currentUser.lastNicknameChange + FOURTEEN_DAYS_MS;
+                if (Date.now() < nextAllowed) {
+                    const remainingDays = Math.ceil((nextAllowed - Date.now()) / (1000 * 60 * 60 * 24));
+                    showCustomToast(`Lỗi: Chờ ${remainingDays} ngày nữa mới được đổi biệt danh!`);
+                    return;
+                }
+            }
+
+            currentUser.nickname = newNick;
+            currentUser.lastNicknameChange = Date.now();
+            saveUserSession();
+            updateUserUI();
+            updateNicknameCooldownUI();
+            showCustomToast('Cập nhật biệt danh thành công!');
+        }
+
+        function saveNotifSettings() {
+            if (!currentUser) return;
+            const checkedBoxes = document.querySelectorAll('.settings-notif-checkbox:checked');
+            currentUser.notifTags = Array.from(checkedBoxes).map(cb => cb.value);
+            saveUserSession();
+            showCustomToast('Lưu tùy chọn thông báo thành công!');
+        }
+
+        function sendNotification(targetUsername, notifObj) {
+            notifications.push({
+                targetUsername: targetUsername,
+                ...notifObj,
+                read: false
+            });
+            localStorage.setItem('roleplay_love_notifications', JSON.stringify(notifications));
+            renderNotifications();
+        }
+
+        function renderNotifications() {
+            const listEl = document.getElementById('notifList');
+            const badge = document.getElementById('notifBadge');
+            if (!listEl) return;
+
+            if (!currentUser) {
+                listEl.innerHTML = `<p class="text-slate-400 text-center py-4 text-xs">Đăng nhập để xem thông báo.</p>`;
+                if (badge) badge.classList.add('hidden');
+                return;
+            }
+
+            const myNotifs = notifications.filter(n => n.targetUsername === currentUser.username);
+            const unreadCount = myNotifs.filter(n => !n.read).length;
+
+            if (badge) {
+                if (unreadCount > 0) {
+                    badge.innerText = unreadCount;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+
+            if (myNotifs.length === 0) {
+                listEl.innerHTML = `<p class="text-slate-400 text-center py-4 text-xs">Chưa có thông báo nào.</p>`;
+                return;
+            }
+
+            listEl.innerHTML = myNotifs.sort((a, b) => b.createdAt - a.createdAt).map(n => `
+                <div onclick="jumpToPostFromNotif('${n.postId}')" class="p-2 rounded-xl ${n.read ? 'bg-slate-50' : 'bg-pastel-lightBlue/30 border-l-2 border-pastel-blue'} hover:bg-slate-100 cursor-pointer transition">
+                    <p class="font-bold text-pastel-darkText text-xs">${escapeHtml(n.title)}</p>
+                    <p class="text-[11px] text-slate-600">${escapeHtml(n.message)}</p>
+                    <span class="text-[9px] text-slate-400">${timeAgo(n.createdAt)}</span>
+                </div>
+            `).join('');
+        }
+
+        function toggleNotifDropdown() {
+            const dropdown = document.getElementById('notifDropdown');
+            if (!dropdown) return;
+            dropdown.classList.toggle('hidden');
+
+            if (!dropdown.classList.contains('hidden') && currentUser) {
+                notifications.forEach(n => {
+                    if (n.targetUsername === currentUser.username) n.read = true;
+                });
+                localStorage.setItem('roleplay_love_notifications', JSON.stringify(notifications));
+                renderNotifications();
+            }
+        }
+
+        function clearNotifications() {
+            if (!currentUser) return;
+            notifications = notifications.filter(n => n.targetUsername !== currentUser.username);
+            localStorage.setItem('roleplay_love_notifications', JSON.stringify(notifications));
+            renderNotifications();
+        }
+
+        function jumpToPostFromNotif(postId) {
+            switchTab('public');
+            setTimeout(() => {
+                const targetPost = document.getElementById(`post-${postId}`);
+                if (targetPost) {
+                    targetPost.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetPost.classList.add('ring-2', 'ring-pastel-blue');
+                    setTimeout(() => targetPost.classList.remove('ring-2', 'ring-pastel-blue'), 2000);
+                }
+            }, 200);
+            const dropdown = document.getElementById('notifDropdown');
+            if (dropdown) dropdown.classList.add('hidden');
+        }
+
+        function handleSearch() {
+            const input = document.getElementById('searchInput');
+            if (!input) return;
+            searchQuery = input.value.trim();
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (clearBtn) {
+                if (searchQuery) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
+            renderPosts();
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('searchInput');
+            if (input) input.value = '';
+            handleSearch();
+        }
+
+        function quickFilterTag(tag) {
+            const input = document.getElementById('searchInput');
+            if (input) input.value = `#${tag}`;
+            handleSearch();
+        }
+
+        function updateTimersAndCountdown() {
+            posts.forEach(post => {
+                const editBtn = document.getElementById(`editBtn-${post.id}`);
+                const editTimer = document.getElementById(`editTimer-${post.id}`);
+
+                if (editBtn && editTimer) {
+                    const canEditSeconds = Math.max(0, Math.ceil((post.createdAt + 5000 - Date.now()) / 1000));
+                    if (canEditSeconds > 0) {
+                        editBtn.disabled = true;
+                        editTimer.innerText = `${canEditSeconds}s`;
+                    } else {
+                        editBtn.disabled = false;
+                        editTimer.innerText = 'Sửa';
+                    }
+                }
+            });
+        }
+
+        function toggleChatWidget() {
+            if (!currentUser) {
+                showCustomToast('Vui lòng nhập tên người dùng để nhắn tin!');
+                switchTab('own');
+                return;
+            }
+
+            const panel = document.getElementById('chatPanel');
+            if (!panel) return;
+            const isHidden = panel.classList.contains('hidden');
+            
+            if (isHidden) {
+                panel.classList.remove('hidden');
+                if (!activeChatUser) {
+                    showChatUserSearch();
+                } else {
+                    renderChatMessages();
+                }
+            } else {
+                panel.classList.add('hidden');
+            }
+        }
+
+        function showChatUserSearch() {
+            const overlay = document.getElementById('chatUserSearchOverlay');
+            if (overlay) overlay.classList.remove('hidden');
+            searchUsersForChat();
+        }
+
+        function searchUsersForChat() {
+            const input = document.getElementById('chatSearchInput');
+            const resultsEl = document.getElementById('chatUserSearchResults');
+            if (!resultsEl) return;
+
+            const query = input ? input.value.trim().toLowerCase() : '';
+            const otherUsers = registeredUsers.filter(u => u.username !== currentUser.username);
+            const filtered = otherUsers.filter(u => 
+                u.username.toLowerCase().includes(query) || 
+                u.nickname.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                resultsEl.innerHTML = `<p class="text-slate-400 text-center py-6 italic text-xs">Không tìm thấy người dùng nào.</p>`;
+                return;
+            }
+
+            resultsEl.innerHTML = filtered.map(u => `
+                <div onclick="selectUserForChat('${u.username}')" class="p-2 rounded-xl bg-slate-50 hover:bg-pastel-lightBlue/30 flex items-center justify-between cursor-pointer transition border border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-full text-white font-bold text-xs flex items-center justify-center flex-shrink-0" style="background-color: ${u.color}">
+                            ${u.nickname.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="font-bold text-pastel-darkText text-xs truncate">${escapeHtml(u.nickname)}</p>
+                            <p class="text-[10px] text-slate-400 truncate">@${escapeHtml(u.username)}</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-pastel-accent font-semibold bg-white px-2 py-1 rounded-lg shadow-sm">Nhắn</span>
+                </div>
+            `).join('');
+        }
+
+        function startChatWithUser(username) {
+            if (!currentUser) {
+                showCustomToast('Vui lòng đăng nhập để bắt đầu trò chuyện!');
+                switchTab('own');
+                return;
+            }
+            if (username === currentUser.username) {
+                showCustomToast('Bạn không thể tự nhắn tin cho chính mình!');
+                return;
+            }
+
+            selectUserForChat(username);
+            const panel = document.getElementById('chatPanel');
+            if (panel) panel.classList.remove('hidden');
+        }
+
+        function selectUserForChat(username) {
+            let targetUser = registeredUsers.find(u => u.username === username);
+            if (!targetUser) {
+                targetUser = { username: username, nickname: username, color: '#8eabb5' };
+            }
+
+            activeChatUser = targetUser;
+
+            const avatarEl = document.getElementById('chatActiveAvatar');
+            if (avatarEl) {
+                avatarEl.style.backgroundColor = targetUser.color;
+                avatarEl.innerText = targetUser.nickname.charAt(0).toUpperCase();
+            }
+
+            const titleEl = document.getElementById('chatActiveTitle');
+            const subTitleEl = document.getElementById('chatActiveSubtitle');
+            if (titleEl) titleEl.innerText = targetUser.nickname;
+            if (subTitleEl) subTitleEl.innerText = `@${targetUser.username}`;
+
+            const inputMsg = document.getElementById('chatInputMessage');
+            const sendBtn = document.getElementById('chatSendBtn');
+            if (inputMsg) inputMsg.disabled = false;
+            if (sendBtn) sendBtn.disabled = false;
+
+            const overlay = document.getElementById('chatUserSearchOverlay');
+            if (overlay) overlay.classList.add('hidden');
+
+            const conversationKey = getConversationKey(currentUser.username, activeChatUser.username);
+            if (directMessages[conversationKey]) {
+                directMessages[conversationKey].forEach(msg => {
+                    if (msg.sender !== currentUser.username) msg.read = true;
+                });
+                localStorage.setItem('roleplay_love_direct_messages', JSON.stringify(directMessages));
+                updateUnreadChatBadge();
+            }
+
+            renderChatMessages();
+        }
+
+        function getConversationKey(userA, userB) {
+            return [userA, userB].sort().join('_vs_');
+        }
+
+        function renderChatMessages() {
+            if (!activeChatUser || !currentUser) return;
+
+            const area = document.getElementById('chatMessagesArea');
+            if (!area) return;
+            const conversationKey = getConversationKey(currentUser.username, activeChatUser.username);
+            const messages = directMessages[conversationKey] || [];
+
+            if (messages.length === 0) {
+                area.innerHTML = `
+                    <div class="text-center py-10 text-slate-400 space-y-1.5">
+                        <div class="w-9 h-9 rounded-full bg-pastel-lightBlue/40 text-pastel-accent mx-auto flex items-center justify-center text-base">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <p class="text-xs">Bắt đầu nhắn tin cho <strong>@${escapeHtml(activeChatUser.username)}</strong>!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            area.innerHTML = messages.map(msg => {
+                const isMe = msg.sender === currentUser.username;
+                return `
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+                        <div class="max-w-[85%] p-2.5 rounded-2xl text-xs ${isMe ? 'bg-pastel-blue text-white rounded-br-none shadow-sm' : 'bg-slate-100 text-pastel-darkText rounded-bl-none'}">
+                            ${escapeHtml(msg.text)}
+                        </div>
+                        <span class="text-[9px] text-slate-400 mt-0.5 px-1">${timeAgo(msg.timestamp)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            area.scrollTop = area.scrollHeight;
+        }
+
+        function handleSendDirectMessage(e) {
+            e.preventDefault();
+            if (!currentUser || !activeChatUser) return;
+
+            const input = document.getElementById('chatInputMessage');
+            if (!input) return;
+            const text = input.value.trim();
+            if (!text) return;
+
+            const conversationKey = getConversationKey(currentUser.username, activeChatUser.username);
+            if (!directMessages[conversationKey]) {
+                directMessages[conversationKey] = [];
+            }
+
+            const newMessage = {
+                id: 'msg_' + Date.now(),
+                sender: currentUser.username,
+                text: text,
+                timestamp: Date.now(),
+                read: false
+            };
+
+            directMessages[conversationKey].push(newMessage);
+            localStorage.setItem('roleplay_love_direct_messages', JSON.stringify(directMessages));
+
+            input.value = '';
+            renderChatMessages();
+
+            if (activeChatUser.username === 'chichan' || activeChatUser.username === 'yuuki_art') {
+                setTimeout(() => {
+                    simulateBotReply(activeChatUser, conversationKey);
+                }, 1500);
+            }
+        }
+
+        function deleteChatHistory() {
+            if (!currentUser || !activeChatUser) return;
+            const conversationKey = getConversationKey(currentUser.username, activeChatUser.username);
+            if (directMessages[conversationKey]) {
+                delete directMessages[conversationKey];
+                localStorage.setItem('roleplay_love_direct_messages', JSON.stringify(directMessages));
+                showCustomToast('Đã xóa lịch sử trò chuyện!');
+                renderChatMessages();
+            }
+        }
+
+        function simulateBotReply(botUser, conversationKey) {
+            const replies = [
+                "Chào bạn! Cảm ơn bạn đã nhắn tin cho mình nha 🌸",
+                "Plot bạn quan tâm thế nào nhỉ? Chúng mình cùng thảo luận nhé!",
+                "Mình vừa đọc tin nhắn nè, bạn gửi OCs qua cho mình xem với nha!",
+                "Rất vui được làm quen với bạn trên Roleplay Love!"
+            ];
+            const randomReply = replies[Math.floor(Math.random() * replies.length)];
+
+            if (!directMessages[conversationKey]) directMessages[conversationKey] = [];
+            
+            directMessages[conversationKey].push({
+                id: 'msg_' + Date.now(),
+                sender: botUser.username,
+                text: randomReply,
+                timestamp: Date.now(),
+                read: (activeChatUser && activeChatUser.username === botUser.username)
+            });
+
+            localStorage.setItem('roleplay_love_direct_messages', JSON.stringify(directMessages));
+            if (activeChatUser && activeChatUser.username === botUser.username) {
+                renderChatMessages();
+            } else {
+                updateUnreadChatBadge();
+            }
+        }
+
+        function updateUnreadChatBadge() {
+            if (!currentUser) return;
+            let unreadTotal = 0;
+
+            Object.keys(directMessages).forEach(key => {
+                if (key.includes(currentUser.username)) {
+                    directMessages[key].forEach(msg => {
+                        if (msg.sender !== currentUser.username && !msg.read) {
+                            unreadTotal++;
+                        }
+                    });
+                }
+            });
+
+            const badge = document.getElementById('chatUnreadBadge');
+            if (badge) {
+                if (unreadTotal > 0) {
+                    badge.innerText = unreadTotal;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
+
+        function timeAgo(timestamp) {
+            const seconds = Math.floor((Date.now() - timestamp) / 1000);
+            if (seconds < 60) return 'Vừa xong';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes}m trước`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours}h trước`;
+            const days = Math.floor(hours / 24);
+            return `${days}d trước`;
+        }
+
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function showCustomToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-4 right-4 z-[10001] glass-card bg-pastel-darkText text-white text-xs px-3.5 py-2.5 rounded-2xl shadow-xl fade-in flex items-center gap-2 border border-slate-700 max-w-[85vw]';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-pastel-lightBlue"></i> <span class="truncate">${escapeHtml(msg)}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
